@@ -6,7 +6,9 @@ class NotesController < ApplicationController
   # GET /notes
   # GET /notes.json
   def index
-    @notes = Note.with_roles([:onwer, :reader, :contributor], current_user)
+    ids = Note.with_roles([:onwer, :reader, :contributor])
+              .where(user: current_user).map(&:id).uniq
+    @notes = Note.where(id: ids)
   end
 
   # GET /notes/1
@@ -17,8 +19,7 @@ class NotesController < ApplicationController
 
   # GET /notes/new
   def new
-    @note = current_user.notes.new
-    user.add_role :onwer, @note
+    @note = Note.new
   end
 
   # GET /notes/1/edit
@@ -33,9 +34,11 @@ class NotesController < ApplicationController
 
   def create
     @note = Note.new(note_params)
-
+    @note.user = current_user
     respond_to do |format|
       if @note.save
+        binding.pry
+        current_user.add_role :onwer, @note
         format.html { redirect_to @note, notice: 'Note was successfully created.' }
         format.json { render :show, status: :created, location: @note }
       else
@@ -76,18 +79,30 @@ class NotesController < ApplicationController
   end
 
   def check_auth
-    unless contributor? || owner?
+    unless contributor? || onwer?
       redirect_back fallback_location: "/", alert: "Not allowed"
     end
   end
 
   def check_reader
-    unless contributor? || owner? || reader?
+    unless reader? || onwer? || contributor?
       redirect_back fallback_location: "/", alert: "Not allowed"
-    end        
+    end
+  end
+
+  def onwer?
+    current_user.has_role? :onwer, @note
+  end
+  
+  def contributor?
+    current_user.has_role? :contributor, @note
+  end
+
+  def reader?
+    current_user.has_role? :reader, @note
   end
 
   def note_params
-    params.require(:note).permit(:title, :body, :user_id)
+    params.require(:note).permit(:title, :body)
   end
 end

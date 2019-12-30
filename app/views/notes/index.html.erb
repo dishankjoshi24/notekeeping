@@ -22,15 +22,21 @@
         <td><%= note.user_id %></td>
         <td><%=l note.created_at %></td>
         <td>
+          <% if read?(note) %>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       note_path(note), :class => 'btn btn-default btn-xs' %>
+          <% end %>
+          <% if update?(note) %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_note_path(note), :class => 'btn btn-default btn-xs' %>
+          <% end %>            
+          <% if delete?(note) %>            
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       note_path(note),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-xs btn-danger' %>
+          <% end %>            
         </td>
       </tr>
     <% end %>
