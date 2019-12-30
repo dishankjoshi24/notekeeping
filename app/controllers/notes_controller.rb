@@ -1,20 +1,24 @@
 class NotesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_note, only: [:show, :edit, :update, :destroy]
-
+  before_action :check_auth, only: [:edit, :update]
+  before_action :check_reader, only: [:show]
   # GET /notes
   # GET /notes.json
   def index
-    @notes = Note.all
+    @notes = Note.with_roles([:onwer, :reader, :contributor], current_user)
   end
 
   # GET /notes/1
   # GET /notes/1.json
   def show
+
   end
 
   # GET /notes/new
   def new
-    @note = Note.new
+    @note = current_user.notes.new
+    user.add_role :onwer, @note
   end
 
   # GET /notes/1/edit
@@ -23,6 +27,10 @@ class NotesController < ApplicationController
 
   # POST /notes
   # POST /notes.json
+  def share
+
+  end
+
   def create
     @note = Note.new(note_params)
 
@@ -62,13 +70,24 @@ class NotesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_note
-      @note = Note.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def note_params
-      params.require(:note).permit(:title, :body, :user_id)
+  def set_note
+    @note = Note.find(params[:id])
+  end
+
+  def check_auth
+    unless contributor? || owner?
+      redirect_back fallback_location: "/", alert: "Not allowed"
     end
+  end
+
+  def check_reader
+    unless contributor? || owner? || reader?
+      redirect_back fallback_location: "/", alert: "Not allowed"
+    end        
+  end
+
+  def note_params
+    params.require(:note).permit(:title, :body, :user_id)
+  end
 end
