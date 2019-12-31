@@ -3,22 +3,19 @@
 #
 default: &default
   adapter: postgresql
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  encoding: unicode
+  pool: 5
   timeout: 5000
-  username: postgres
-  password: postgres
-  host: localhost
 
 development:
   <<: *default
-  database: notekeeping_development
 
 test:
   <<: *default
-  database: notekeeping_test
 
 production:
   <<: *default
-  database: notekeeping_production
-  username: notekeeping
-  password: <%= ENV['NOTEKEEPING_DATABASE_PASSWORD'] %>
+  adapter: postgresql
+  host: localhost
+  username: user
+  database: app-dev
