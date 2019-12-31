@@ -11,6 +11,7 @@ module NotesHelper
   end
 
   def delete?(note)
+    #binding.pry
     current_user.has_role? :onwer, note
   end
 end

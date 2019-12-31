@@ -25,7 +25,21 @@
   <div class="form-group">
     <%= f.label :body, :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
-      <%= f.text_field :body, :class => 'form-control' %>
+      <%= f.text_area :body, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:body) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :readers, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.select :readers, User.all.map(&:email).uniq, {}, multiple: true, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:body) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :contributers, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.select :contributors, User.all.map(&:email).uniq, {}, multiple: true, :class => 'form-control' %>
     </div>
     <%=f.error_span(:body) %>
   </div>

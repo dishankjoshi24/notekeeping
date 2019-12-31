@@ -9,7 +9,7 @@
   <dt><strong><%= model_class.human_attribute_name(:body) %>:</strong></dt>
   <dd><%= @note.body %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><%= @note.user_id %></dd>
+  <dd><%= @note.user.email %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

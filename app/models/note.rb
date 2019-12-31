@@ -1,4 +1,6 @@
 class Note < ApplicationRecord
+  attr_accessor :readers, :contributors
+
   resourcify
   belongs_to :user
 

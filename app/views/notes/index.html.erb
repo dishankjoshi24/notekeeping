@@ -19,7 +19,7 @@
         <td><%= link_to note.id, note_path(note) %></td>
         <td><%= note.title %></td>
         <td><%= note.body %></td>
-        <td><%= note.user_id %></td>
+        <td><%= note.user.email %></td>
         <td><%=l note.created_at %></td>
         <td>
           <% if read?(note) %>

@@ -5,9 +5,7 @@ class NotesController < ApplicationController
   before_action :check_reader, only: [:show]
 
   def index
-    ids = Note.with_roles([:onwer, :reader, :contributor])
-              .where(user: current_user).map(&:id).uniq
-    @notes = Note.where(id: ids)
+    @notes = Note.with_roles([:onwer, :reader, :contributor], current_user)
   end
 
   def show
@@ -23,6 +21,7 @@ class NotesController < ApplicationController
     respond_to do |format|
       if @note.save
         add_onwer
+        add_role
         format.html { redirect_to @note, notice: 'Note was successfully created.' }
         format.json { render :show, status: :created, location: @note }
       else
@@ -35,6 +34,7 @@ class NotesController < ApplicationController
   def update
     respond_to do |format|
       if @note.update(note_params)
+        add_role
         format.html { redirect_to @note, notice: 'Note was successfully updated.' }
         format.json { render :show, status: :ok, location: @note }
       else
@@ -56,6 +56,19 @@ class NotesController < ApplicationController
 
   def set_note
     @note = Note.find(params[:id])
+  end
+
+  def add_role
+    reader_ids = role_params['readers'].delete_if(&:blank?)
+    readers = User.where(email: reader_ids)
+    readers.each do |reader|
+      reader.add_role :reader, @note
+    end  
+    contributor_ids = role_params['contributors'].delete_if(&:blank?)
+    contributors = User.where(email: contributor_ids)
+    contributors.each do |contributor|
+      contributor.add_role :contributor, @note
+    end  
   end
 
   def add_onwer
@@ -88,5 +101,9 @@ class NotesController < ApplicationController
 
   def note_params
     params.require(:note).permit(:title, :body)
+  end
+
+  def role_params
+    params.require(:note).permit(readers: [], contributors: [])
   end
 end
