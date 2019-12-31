@@ -16,14 +16,13 @@
         <div class="container">
           <ul class="nav navbar-nav">
             <% if user_signed_in? %>
-              <li><%= "Welcome -" %></li>
-              <li><%= current_user.email %></li>
-              <li><%= link_to('Notes', notes_path) %></li>            
-              <li><%= link_to('Edit registration', edit_user_registration_path) %></li>
-              <li><%=link_to "Sign Out", destroy_user_session_path, method: :delete%></li>
+              <li><%= link_to "Welcome - #{current_user.email}", notes_path %></li>
+              <li><%= link_to 'Notes', notes_path %></li>            
+              <li><%= link_to 'Edit registration', edit_user_registration_path %></li>
+              <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete %></li>
             <% else %>
-              <li><%=link_to "Sign Up", new_user_registration_path%></li>
-              <li><%=link_to "Sign In", new_user_session_path%></li>
+              <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+              <li><%= link_to 'Sign In', new_user_session_path %></li>
             <% end %>
           </ul>
         </div>

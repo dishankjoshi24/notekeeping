@@ -21,7 +21,7 @@ class NotesController < ApplicationController
     respond_to do |format|
       if @note.save
         add_onwer
-        add_role
+        manage_role
         format.html { redirect_to @note, notice: 'Note was successfully created.' }
         format.json { render :show, status: :created, location: @note }
       else
@@ -34,7 +34,7 @@ class NotesController < ApplicationController
   def update
     respond_to do |format|
       if @note.update(note_params)
-        add_role
+        manage_role
         format.html { redirect_to @note, notice: 'Note was successfully updated.' }
         format.json { render :show, status: :ok, location: @note }
       else
@@ -74,7 +74,7 @@ class NotesController < ApplicationController
     end
   end
 
-  def add_role
+  def manage_role
     add_reader
     add_contributor
   end
