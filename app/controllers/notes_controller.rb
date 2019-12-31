@@ -5,7 +5,8 @@ class NotesController < ApplicationController
   before_action :check_reader, only: [:show]
 
   def index
-    @notes = Note.with_roles([:onwer, :reader, :contributor], current_user)
+    ids = Note.with_roles([:onwer, :reader, :contributor], current_user).map(&:id).uniq
+    @notes = Note.where(id: ids)
   end
 
   def show

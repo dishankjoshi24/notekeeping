@@ -9,6 +9,11 @@ default: &default
 
 development:
   <<: *default
+  adapter: postgresql
+  host: localhost
+  username: postgres
+  password: postgres
+  database: notekeeping_dev
 
 test:
   <<: *default
