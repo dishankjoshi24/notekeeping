@@ -33,22 +33,32 @@ class NotesController < ApplicationController
 
   def update
     respond_to do |format|
-      if @note.update(note_params)
-        manage_role
-        format.html { redirect_to @note, notice: 'Note was successfully updated.' }
-        format.json { render :show, status: :ok, location: @note }
+      if onwer? || contributor?
+        if @note.update(note_params)
+          manage_role if onwer?
+          format.html { redirect_to @note, notice: 'Note was successfully updated.' }
+          format.json { render :show, status: :ok, location: @note }
+        else
+          format.html { render :edit }
+          format.json { render json: @note.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { render :edit }
-        format.json { render json: @note.errors, status: :unprocessable_entity }
-      end
+        format.html { redirect_to notes_url, notice: 'Access Denied.' }
+        format.json { head :no_content }
+      end  
     end
   end
 
   def destroy
-    @note.destroy
     respond_to do |format|
-      format.html { redirect_to notes_url, notice: 'Note was successfully destroyed.' }
-      format.json { head :no_content }
+      if onwer?
+        @note.destroy
+        format.html { redirect_to notes_url, notice: 'Note was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to notes_url, notice: 'Access Denied.' }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -85,13 +95,13 @@ class NotesController < ApplicationController
 
   def check_auth
     unless contributor? || onwer?
-      redirect_back fallback_location: "/", alert: "Not allowed"
+      redirect_back fallback_location: "/", notice: "Not allowed"
     end
   end
 
   def check_reader
     unless reader? || onwer? || contributor?
-      redirect_back fallback_location: "/", alert: "Not allowed"
+      redirect_back fallback_location: "/", notice: "Not allowed"
     end
   end
 

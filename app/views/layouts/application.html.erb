@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+  <% flash.each do |name, msg| %>
+    <%= content_tag :div, msg, class: "alert alert-info" %>
+  <% end %>
   <head>
     <title>Notekeeping</title>
     <%= csrf_meta_tags %>

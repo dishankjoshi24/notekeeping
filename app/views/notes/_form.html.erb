@@ -29,27 +29,28 @@
     </div>
     <%=f.error_span(:body) %>
   </div>
-  <div class="form-group">
-    <%= f.label :add_readers, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
-      <%= f.select :readers, User.all.map(&:email).uniq, {}, multiple: true, :class => 'form-control' %>
+  <% if delete?(@note) %>
+    <div class="form-group">
+      <%= f.label :add_readers, :class => 'control-label col-lg-2' %>
+      <div class="col-lg-10">
+        <%= f.select :readers, User.all.map(&:email).uniq, {}, multiple: true, :class => 'form-control' %>
+      </div>
+      <%=f.error_span(:body) %>
     </div>
-    <%=f.error_span(:body) %>
-  </div>
-  <div class="form-group">
-    <%= f.label :add_contributers, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
-      <%= f.select :contributors, User.all.map(&:email).uniq, {}, multiple: true, :class => 'form-control' %>
+    <div class="form-group">
+      <%= f.label :add_contributers, :class => 'control-label col-lg-2' %>
+      <div class="col-lg-10">
+        <%= f.select :contributors, User.all.map(&:email).uniq, {}, multiple: true, :class => 'form-control' %>
+      </div>
+      <%=f.error_span(:body) %>
     </div>
-    <%=f.error_span(:body) %>
-  </div>
-  <div class="form-group">
-    <%= f.label :__, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
-      <%= f.label :Hold_control_to_select_multiples, :class => 'form-control' %>
+    <div class="form-group">
+      <%= f.label :__, :class => 'control-label col-lg-2' %>
+      <div class="col-lg-10">
+        <%= f.label :Hold_control_to_select_multiples, :class => 'form-control' %>
+      </div>
     </div>
-  </div>
-    
+  <% end %>
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
       <%= f.submit nil, :class => 'btn btn-primary' %>
