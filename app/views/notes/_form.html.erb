@@ -29,7 +29,7 @@
     </div>
     <%=f.error_span(:body) %>
   </div>
-  <% if delete?(@note) %>
+  <% if delete?(@note) || params[:action] == 'new' %>
     <div class="form-group">
       <%= f.label :add_readers, :class => 'control-label col-lg-2' %>
       <div class="col-lg-10">
