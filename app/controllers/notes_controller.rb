@@ -58,17 +58,25 @@ class NotesController < ApplicationController
     @note = Note.find(params[:id])
   end
 
-  def add_role
+  def add_reader
     reader_ids = role_params['readers'].delete_if(&:blank?)
     readers = User.where(email: reader_ids)
     readers.each do |reader|
       reader.add_role :reader, @note
-    end  
+    end    
+  end
+
+  def add_contributor
     contributor_ids = role_params['contributors'].delete_if(&:blank?)
     contributors = User.where(email: contributor_ids)
     contributors.each do |contributor|
       contributor.add_role :contributor, @note
-    end  
+    end
+  end
+
+  def add_role
+    add_reader
+    add_contributor
   end
 
   def add_onwer

@@ -24,13 +24,6 @@ ActiveRecord::Schema.define(version: 2019_12_30_150849) do
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
-  create_table "posts", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
